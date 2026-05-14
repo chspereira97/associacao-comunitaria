@@ -1,0 +1,14 @@
+# Impede que a pasta do ambiente virtual seja enviada
+venv/
+
+# Impede que arquivos Python compilados sejam enviados
+__pycache__/
+*.pyc
+
+# Impede que o banco de dados SQLite seja enviado
+instance/
+*.db
+
+# Arquivos do sistema operacional
+.DS_Store
+Thumbs.db
