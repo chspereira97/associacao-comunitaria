@@ -1,7 +1,8 @@
 from flask import render_template, request, redirect, url_for, flash
 from app import app, db
 from app.models.aluno import Aluno
-from app.models.responsavel import Responsavel, aluno_responsavel
+from app.models.responsavel import Responsavel
+from app.models.aluno_responsavel import aluno_responsavel
 from app.utils.validators import validar_email, validar_telefone, validar_cpf
 
 @app.route('/alunos/<int:aluno_id>/responsaveis')

@@ -150,7 +150,7 @@ def editar_aluno(id):
 def deletar_aluno(id):
     from app.models.matricula import Matricula
     from app.models.frequencia import Frequencia
-    from app.models.responsavel import aluno_responsavel
+    from app.models.aluno_responsavel import aluno_responsavel
     
     aluno = Aluno.query.get_or_404(id)
     nome = aluno.nome

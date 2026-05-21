@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h2>📝 Matricular Aluno</h2>
+            <h5>{{ turma.projeto.nome }} - {{ turma.nome }}</h5>
+            <hr>
+            
+            {% if alunos %}
+            <form method="POST">
+                <div class="mb-3">
+                    <label class="form-label">Aluno *</label>
+                    <select class="form-control" name="aluno_id" required>
+                        <option value="">Selecione um aluno...</option>
+                        {% for aluno in alunos %}
+                        <option value="{{ aluno.id }}">{{ aluno.nome }} ({{ aluno.idade }} anos)</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Status</label>
+                    <select class="form-control" name="status">
+                        <option value="Ativo" selected>Ativo</option>
+                        <option value="Trancado">Trancado</option>
+                        <option value="Concluído">Concluído</option>
+                    </select>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Observações</label>
+                    <textarea class="form-control" name="observacoes" rows="2" placeholder="Ex: Bolsista..."></textarea>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">💾 Matricular</button>
+                <a href="/turmas/{{ turma.id }}/matriculas" class="btn btn-secondary">Cancelar</a>
+            </form>
+            {% else %}
+            <div class="alert alert-warning">
+                <h4>⚠️ Nenhum aluno disponível</h4>
+                <p>Todos os alunos já estão matriculados nesta turma ou não há alunos cadastrados.</p>
+                <a href="/alunos" class="btn btn-primary">Cadastrar Novo Aluno</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

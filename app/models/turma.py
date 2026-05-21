@@ -14,7 +14,17 @@ class Turma(db.Model):
     ativa = db.Column(db.Boolean, default=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
+    # Relacionamento com Projeto
     projeto = db.relationship('Projeto', backref=db.backref('turmas', lazy='dynamic'))
+    
+    # Relacionamento N:N com Usuario (professores)
+    from app.models.professor_turma import professor_turma
+    professores = db.relationship(
+        'Usuario',
+        secondary=professor_turma,
+        backref=db.backref('turmas_que_leciona', lazy='dynamic'),
+        lazy='dynamic'
+    )
     
     def __repr__(self):
         return f'<Turma {self.nome}>'

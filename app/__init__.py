@@ -1,6 +1,7 @@
-from flask import Flask
+from flask import Flask, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
+from flask_login import LoginManager, current_user
+from datetime import timedelta
 import os
 
 app = Flask(__name__)
@@ -15,11 +16,26 @@ db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
+login_manager.login_message = 'Faça login para acessar esta página.'
+login_manager.login_message_category = 'warning'
 
+app.jinja_env.globals['timedelta'] = timedelta
+
+# Proteção global de rotas
+@app.before_request
+def require_login():
+    public_endpoints = ['login', 'static']
+    if not current_user.is_authenticated:
+        if request.endpoint not in public_endpoints:
+            return redirect(url_for('login'))
+
+# Importar models
 from app.models import Aluno, Responsavel, aluno_responsavel, Projeto, Turma, Matricula, Frequencia, Usuario, professor_turma
 
 @login_manager.user_loader
 def load_user(user_id):
     return Usuario.query.get(int(user_id))
 
+# Importar rotas
 from app import routes
+from app.controllers import aluno_controller, responsavel_controller, turma_controller, matricula_controller, frequencia_controller, auth_controller, relatorio_controller

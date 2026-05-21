@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid mt-3">
+    <h2><i class="fas fa-chart-pie"></i> Painel de Relatórios</h2>
+    <hr>
+
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-users"></i> Total Alunos</h5>
+                    <p class="display-4">{{ total_alunos }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-success">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-chalkboard"></i> Turmas Ativas</h5>
+                    <p class="display-4">{{ total_turmas }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-info">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-calendar-check"></i> Média Frequência (30d)</h5>
+                    <p class="display-4">{{ media_frequencia }}%</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-warning">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-exclamation-triangle"></i> Sem Responsável</h5>
+                    <p class="display-4">{{ alunos_sem_resp|length }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">Distribuição por Faixa Etária</div>
+                <div class="card-body">
+                    <canvas id="graficoFaixaEtaria" width="100%" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">Alunos por Projeto</div>
+                <div class="card-body">
+                    <canvas id="graficoProjetos" width="100%" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">Evolução de Matrículas (6m)</div>
+                <div class="card-body">
+                    <canvas id="graficoEvolucao" width="100%" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card border-danger">
+                <div class="card-header bg-danger text-white"><i class="fas fa-bell"></i> Alunos Menores sem Responsável</div>
+                <div class="card-body">
+                    {% if alunos_sem_resp %}
+                    <ul class="list-group">
+                        {% for aluno in alunos_sem_resp %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ aluno.nome }} ({{ aluno.idade }} anos)
+                            <a href="/alunos/{{ aluno.id }}/responsaveis" class="btn btn-sm btn-outline-primary"><i class="fas fa-user-plus"></i> Adicionar</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p class="text-success">Todos os menores possuem responsável.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card border-warning">
+                <div class="card-header bg-warning text-dark"><i class="fas fa-chart-line"></i> Turmas com Baixa Frequência (<70%)</div>
+                <div class="card-body">
+                    {% if turmas_baixa_freq %}
+                    <ul class="list-group">
+                        {% for item in turmas_baixa_freq %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ item.turma.projeto.nome }} - {{ item.turma.nome }}
+                            <span class="badge bg-danger">{{ item.percentual }}%</span>
+                            <a href="/turmas/{{ item.turma.id }}/frequencia/historico" class="btn btn-sm btn-outline-secondary"><i class="fas fa-history"></i> Histórico</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p class="text-success">Todas as turmas com frequência satisfatória.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col text-end">
+            <a href="/relatorios/exportar-alunos" class="btn btn-success"><i class="fas fa-download"></i> Exportar Lista de Alunos (CSV)</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+    new Chart(document.getElementById('graficoFaixaEtaria'), {
+        type: 'pie',
+        data: {
+            labels: ['6-10 anos', '11-14 anos', '15-17 anos', '18+ anos'],
+            datasets: [{ data: [{{ faixas['6-10'] }}, {{ faixas['11-14'] }}, {{ faixas['15-17'] }}, {{ faixas['18+'] }}], backgroundColor: ['#4CAF50', '#2196F3', '#FF9800', '#9C27B0'] }]
+        },
+        options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+    });
+    new Chart(document.getElementById('graficoProjetos'), {
+        type: 'bar',
+        data: { labels: {{ projetos_labels|tojson }}, datasets: [{ label: 'Matrículas Ativas', data: {{ projetos_data|tojson }}, backgroundColor: '#36A2EB' }] },
+        options: { responsive: true, scales: { y: { beginAtZero: true, stepSize: 1 } } }
+    });
+    new Chart(document.getElementById('graficoEvolucao'), {
+        type: 'line',
+        data: { labels: {{ meses_labels|tojson }}, datasets: [{ label: 'Novas Matrículas', data: {{ meses_data|tojson }}, borderColor: '#FF6384', tension: 0.1, fill: false }] },
+        options: { responsive: true, scales: { y: { beginAtZero: true, stepSize: 1 } } }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h2>📝 Cadastrar Nova Turma</h2>
+            <hr>
+            <form method="POST">
+                <div class="mb-3">
+                    <label class="form-label">Projeto *</label>
+                    <select class="form-control" name="projeto_id" required>
+                        <option value="">Selecione...</option>
+                        {% for p in projetos %}
+                        <option value="{{ p.id }}">{{ p.nome }}</option>
+                        {% endfor %}
+                    </select>
+                    {% if not projetos %}
+                    <small class="text-danger">Cadastre um projeto primeiro!</small>
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Nome da Turma *</label>
+                    <input type="text" class="form-control" name="nome" value="{{ valores.nome or '' }}" required>
+                    <small>Ex: Sub-15, Infantil, Adulto</small>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Horário *</label>
+                    <input type="text" class="form-control" name="horario" value="{{ valores.horario or '' }}" placeholder="Ex: 14:00 - 16:00" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Dia da Semana *</label>
+                    <input type="text" class="form-control" name="dia_semana" value="{{ valores.dia_semana or '' }}" placeholder="Ex: Segunda e Quarta" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Professor(es) Responsável(is)</label>
+                    <select class="form-control" name="professores" multiple size="4">
+                        {% for prof in professores %}
+                        <option value="{{ prof.id }}">{{ prof.nome }} ({{ prof.email }})</option>
+                        {% endfor %}
+                    </select>
+                    <small class="text-muted">Segure Ctrl para selecionar mais de um.</small>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Nome do Professor (texto livre)</label>
+                    <input type="text" class="form-control" name="professor" value="{{ valores.professor or '' }}">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Capacidade Máxima</label>
+                    <input type="number" class="form-control" name="capacidade_maxima" value="{{ valores.capacidade_maxima or 20 }}" min="1">
+                </div>
+                <button type="submit" class="btn btn-primary">💾 Salvar</button>
+                <a href="/turmas" class="btn btn-secondary">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

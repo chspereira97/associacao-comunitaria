@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h2>✏️ Editar Projeto</h2>
+            <hr>
+            <form method="POST">
+                <div class="mb-3">
+                    <label class="form-label">Nome do Projeto *</label>
+                    <input type="text" class="form-control" name="nome" value="{{ projeto.nome }}" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Descrição</label>
+                    <textarea class="form-control" name="descricao" rows="3">{{ projeto.descricao or '' }}</textarea>
+                </div>
+                <div class="mb-3 form-check">
+                    <input type="checkbox" class="form-check-input" name="ativo" id="ativo" {% if projeto.ativo %}checked{% endif %}>
+                    <label class="form-check-label" for="ativo">Projeto Ativo</label>
+                </div>
+                <button type="submit" class="btn btn-primary">💾 Salvar Alterações</button>
+                <a href="/projetos" class="btn btn-secondary">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

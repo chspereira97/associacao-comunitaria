@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h2>✏️ Editar Turma</h2>
+            <hr>
+            <form method="POST">
+                <div class="mb-3">
+                    <label class="form-label">Projeto *</label>
+                    <select class="form-control" name="projeto_id" required>
+                        {% for p in projetos %}
+                        <option value="{{ p.id }}" {% if turma.projeto_id == p.id %}selected{% endif %}>{{ p.nome }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Nome da Turma *</label>
+                    <input type="text" class="form-control" name="nome" value="{{ turma.nome }}" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Horário *</label>
+                    <input type="text" class="form-control" name="horario" value="{{ turma.horario }}" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Dia da Semana *</label>
+                    <input type="text" class="form-control" name="dia_semana" value="{{ turma.dia_semana }}" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Professor(es) Responsável(is)</label>
+                    <select class="form-control" name="professores" multiple size="4">
+                        {% for prof in professores %}
+                        <option value="{{ prof.id }}" {% if prof.id in professores_vinculados_ids %}selected{% endif %}>{{ prof.nome }} ({{ prof.email }})</option>
+                        {% endfor %}
+                    </select>
+                    <small class="text-muted">Segure Ctrl para selecionar mais de um.</small>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Nome do Professor (texto livre)</label>
+                    <input type="text" class="form-control" name="professor" value="{{ turma.professor or '' }}">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Capacidade Máxima</label>
+                    <input type="number" class="form-control" name="capacidade_maxima" value="{{ turma.capacidade_maxima }}" min="1">
+                </div>
+                <button type="submit" class="btn btn-primary">💾 Salvar Alterações</button>
+                <a href="/turmas" class="btn btn-secondary">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

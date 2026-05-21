@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>📋 Alunos Matriculados</h2>
+            <h4>{{ turma.projeto.nome }} - {{ turma.nome }}</h4>
+            <p>
+                <strong>Horário:</strong> {{ turma.horario }}<br>
+                <strong>Dias:</strong> {{ turma.dia_semana }}<br>
+                <strong>Professor:</strong> {{ turma.professor or 'Não informado' }}<br>
+                <strong>Vagas:</strong> {{ vagas_ocupadas }} / {{ turma.capacidade_maxima }} 
+                ({{ vagas_disponiveis }} disponíveis)
+            </p>
+            <hr>
+            
+            <a href="/turmas" class="btn btn-secondary mb-3">← Voltar</a>
+            <a href="/turmas/{{ turma.id }}/frequencia" class="btn btn-success mb-3">📋 Chamada</a>
+            <a href="/turmas/{{ turma.id }}/frequencia/historico" class="btn btn-info mb-3">📊 Histórico</a>
+            
+            {% if vagas_disponiveis > 0 %}
+            <a href="/turmas/{{ turma.id }}/matricular" class="btn btn-primary mb-3">+ Matricular Aluno</a>
+            {% else %}
+            <button class="btn btn-secondary mb-3" disabled>Turma Lotada</button>
+            {% endif %}
+            
+            {% if matriculas %}
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Aluno</th>
+                            <th>Idade</th>
+                            <th>Data Matrícula</th>
+                            <th>Status</th>
+                            <th>Observações</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for matricula in matriculas %}
+                        <tr>
+                            <td>{{ matricula.aluno.nome }}</td>
+                            <td>{{ matricula.aluno.idade }} anos</td>
+                            <td>{{ matricula.data_matricula.strftime('%d/%m/%Y') }}</td>
+                            <td>
+                                {% if matricula.status == 'Ativo' %}
+                                <span class="badge bg-success">Ativo</span>
+                                {% elif matricula.status == 'Trancado' %}
+                                <span class="badge bg-warning">Trancado</span>
+                                {% else %}
+                                <span class="badge bg-secondary">{{ matricula.status }}</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ matricula.observacoes or '-' }}</td>
+                            <td>
+                                <a href="/matriculas/editar/{{ matricula.id }}" class="btn btn-sm btn-warning">✏️ Editar</a>
+                                <a href="/matriculas/deletar/{{ matricula.id }}" class="btn btn-sm btn-danger"
+                                   onclick="return confirm('Remover matrícula de {{ matricula.aluno.nome }}?')">🗑️ Remover</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="alert alert-info">Nenhum aluno matriculado nesta turma.</div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>📊 Histórico de Frequência</h2>
+            <h4>{{ turma.projeto.nome }} - {{ turma.nome }}</h4>
+            <hr>
+            
+            <a href="/turmas/{{ turma.id }}/frequencia" class="btn btn-success mb-3">📋 Nova Chamada</a>
+          
+            {% if historico %}
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Presentes</th>
+                            <th>Ausentes</th>
+                            <th>Total</th>
+                            <th>Percentual</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in historico %}
+                        <tr>
+                            <td>{{ item.data.strftime('%d/%m/%Y') }}</td>
+                            <td><span class="text-success">{{ item.presentes }}</span></td>
+                            <td><span class="text-danger">{{ item.ausentes }}</span></td>
+                            <td>{{ item.total }}</td>
+                            <td>
+                                {% if item.total > 0 %}
+                                    {% set percentual = (item.presentes / item.total * 100) | round %}
+                                    <div class="progress" style="height: 20px;">
+                                        <div class="progress-bar bg-success" style="width: {{ percentual }}%;">{{ percentual }}%</div>
+                                    </div>
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="/turmas/{{ turma.id }}/frequencia/{{ item.data.strftime('%Y-%m-%d') }}" class="btn btn-sm btn-primary">Ver / Editar</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="alert alert-info">Nenhum registro de frequência ainda. <a href="/turmas/{{ turma.id }}/frequencia">Registrar primeira chamada</a>.</div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

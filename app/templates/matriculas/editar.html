@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h2>✏️ Editar Matrícula</h2>
+            <h5>{{ matricula.aluno.nome }} - {{ matricula.turma.projeto.nome }} {{ matricula.turma.nome }}</h5>
+            <hr>
+            
+            <form method="POST">
+                <div class="mb-3">
+                    <label class="form-label">Status</label>
+                    <select class="form-control" name="status">
+                        <option value="Ativo" {% if matricula.status == 'Ativo' %}selected{% endif %}>Ativo</option>
+                        <option value="Trancado" {% if matricula.status == 'Trancado' %}selected{% endif %}>Trancado</option>
+                        <option value="Concluído" {% if matricula.status == 'Concluído' %}selected{% endif %}>Concluído</option>
+                    </select>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Observações</label>
+                    <textarea class="form-control" name="observacoes" rows="3">{{ matricula.observacoes or '' }}</textarea>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">💾 Salvar</button>
+                <a href="/turmas/{{ matricula.turma_id }}/matriculas" class="btn btn-secondary">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

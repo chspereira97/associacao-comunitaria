@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>📁 Projetos</h2>
+    <a href="/projetos/cadastrar" class="btn btn-success mb-3">+ Novo Projeto</a>
+    <a href="/turmas" class="btn btn-secondary mb-3">← Voltar para Turmas</a>
+    
+    {% if projetos %}
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Descrição</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in projetos %}
+                <tr>
+                    <td>{{ p.id }}</td>
+                    <td>{{ p.nome }}</td>
+                    <td>{{ p.descricao or '-' }}</td>
+                    <td>
+                        {% if p.ativo %}
+                        <span class="badge bg-success">Ativo</span>
+                        {% else %}
+                        <span class="badge bg-secondary">Inativo</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="/projetos/editar/{{ p.id }}" class="btn btn-sm btn-warning">✏️ Editar</a>
+                        <a href="/projetos/deletar/{{ p.id }}" class="btn btn-sm btn-danger"
+                           onclick="return confirm('Excluir projeto {{ p.nome }}?')">🗑️ Excluir</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-info">Nenhum projeto cadastrado.</div>
+    {% endif %}
+</div>
+{% endblock %}

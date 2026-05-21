@@ -140,3 +140,21 @@ def editar_usuario(id):
         return redirect(url_for('listar_usuarios'))
     
     return render_template('admin/usuarios/editar.html', usuario=usuario)
+
+@app.route('/admin/usuarios/deletar/<int:id>')
+@login_required
+def deletar_usuario(id):
+    if not current_user.is_admin():
+        flash('Acesso negado.', 'danger')
+        return redirect(url_for('index'))
+    
+    if id == current_user.id:
+        flash('Você não pode deletar seu próprio usuário!', 'danger')
+        return redirect(url_for('listar_usuarios'))
+    
+    usuario = Usuario.query.get_or_404(id)
+    nome = usuario.nome
+    db.session.delete(usuario)
+    db.session.commit()
+    flash(f'🗑️ Usuário {nome} removido com sucesso!', 'warning')
+    return redirect(url_for('listar_usuarios'))

@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h2>✏️ Editar Aluno</h2>
+            <hr>
+            
+            <form method="POST">
+                <div class="mb-3">
+                    <label class="form-label">Nome Completo *</label>
+                    <input type="text" class="form-control" name="nome" value="{{ aluno.nome }}" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Data de Nascimento *</label>
+                    <div class="row">
+                        <div class="col-4">
+                            <select class="form-control" name="dia" required>
+                                <option value="">Dia</option>
+                                {% for d in range(1, 32) %}
+                                <option value="{{ d }}" {% if aluno.data_nascimento.day == d %}selected{% endif %}>{{ d }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-4">
+                            <select class="form-control" name="mes" required>
+                                <option value="">Mês</option>
+                                {% set meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'] %}
+                                {% for i in range(1, 13) %}
+                                <option value="{{ i }}" {% if aluno.data_nascimento.month == i %}selected{% endif %}>{{ meses[i-1] }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-4">
+                            <input type="number" class="form-control" name="ano" value="{{ aluno.data_nascimento.year }}" min="1900" max="2026" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Sexo</label>
+                    <select class="form-control" name="sexo">
+                        <option value="">Selecione...</option>
+                        <option value="M" {% if aluno.sexo == 'M' %}selected{% endif %}>Masculino</option>
+                        <option value="F" {% if aluno.sexo == 'F' %}selected{% endif %}>Feminino</option>
+                    </select>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Telefone</label>
+                    <input type="tel" class="form-control" name="telefone" 
+                           placeholder="Apenas números (mín. 8 dígitos)"
+                           pattern="[0-9]{8,}" inputmode="numeric"
+                           title="Digite apenas números (mínimo 8 dígitos)"
+                           oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                           value="{{ aluno.telefone or '' }}">
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">E-mail</label>
+                    <input type="email" class="form-control" name="email" value="{{ aluno.email or '' }}">
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Endereço *</label>
+                    <textarea class="form-control" name="endereco" rows="2" required>{{ aluno.endereco or '' }}</textarea>
+                    <small class="text-muted">Endereço completo (obrigatório, mínimo 10 caracteres)</small>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Observações</label>
+                    <textarea class="form-control" name="observacoes" rows="3">{{ aluno.observacoes or '' }}</textarea>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">💾 Salvar Alterações</button>
+                <a href="/alunos" class="btn btn-secondary">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

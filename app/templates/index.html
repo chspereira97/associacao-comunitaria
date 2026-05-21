@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <h1 class="display-4">🏠 Associação Comunitária</h1>
+            <p class="lead">Sistema de Gestão de Projetos e Alunos</p>
+            <hr>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-3 mb-3">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <h3>👥</h3>
+                    <h5>Alunos</h5>
+                    <p class="text-muted">Cadastrar e gerenciar alunos</p>
+                    <a href="/alunos" class="btn btn-primary">Acessar</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <h3>👨‍👩‍👧</h3>
+                    <h5>Responsáveis</h5>
+                    <p class="text-muted">Gerenciar responsáveis</p>
+                    <a href="/alunos" class="btn btn-primary">Acessar</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <h3>📚</h3>
+                    <h5>Turmas</h5>
+                    <p class="text-muted">Gerenciar turmas</p>
+                    <a href="/turmas" class="btn btn-primary">Acessar</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <h3>📊</h3>
+                    <h5>Relatórios</h5>
+                    <p class="text-muted">Visualizar relatórios</p>
+                    <a href="/relatorios" class="btn btn-primary">Acessar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-2 justify-content-center">
+        <div class="col-md-3 mb-3">
+            <div class="card h-100 border-warning">
+                <div class="card-body text-center">
+                    <h3>👤</h3>
+                    <h5>Gerenciar Acessos</h5>
+                    <p class="text-muted">Cadastrar professores e admins</p>
+                    <a href="/admin/usuarios" class="btn btn-warning">Acessar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
