@@ -12,3 +12,6 @@ instance/
 # Arquivos do sistema operacional
 .DS_Store
 Thumbs.db
+
+#variaveis de ambiente
+.env
